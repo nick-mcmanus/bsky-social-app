@@ -191,6 +191,25 @@ export function useNotificationsRegistration() {
 
     notyLogger.debug(`useNotificationsRegistration`)
 
+    // --- Create Android Notification Categories---
+    if (Platform.OS === 'android') {
+      const channels = [
+        'like', 
+        'repost', 
+        'follow', 
+        'mention', 
+        'reply', 
+        'quote', 
+        'chat-messages'
+      ]
+      
+      channels.forEach(id => {
+        Notifications.setNotificationChannelAsync(id, {
+          name: id.charAt(0).toUpperCase() + id.slice(1).replace('-', ' '),
+          importance: Notifications.AndroidImportance.DEFAULT,
+        })
+      })
+    }
     /**
      * Init push token, if permissions are granted already. If they weren't,
      * they'll be requested by the `useRequestNotificationsPermission` hook
